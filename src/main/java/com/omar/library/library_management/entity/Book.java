@@ -1,20 +1,36 @@
-package com.omar.library.library_management.book;
+package com.omar.library.library_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
+@Entity(name="books")
 public class Book {
+    @Id
+    @GeneratedValue
     private int id;
+
     @Size(min = 2, max = 50)
+    @Column(unique=true)
     private String title;
+
     @Size(min = 2, max = 50)
     private String author;
+
     @Size(min = 2, max = 50)
     private String topic;
+
     @Max(2025)
     @Min(1900)
     private int year;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "books")
+    private List<User> users;
 
     public Book(){}
     public Book(int id, String title, String author, String topic, int year) {
@@ -23,6 +39,14 @@ public class Book {
         this.author = author;
         this.topic = topic;
         this.year = year;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public void setId(int id) {
