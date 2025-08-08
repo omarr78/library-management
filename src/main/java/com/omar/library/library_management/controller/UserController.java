@@ -1,6 +1,7 @@
 package com.omar.library.library_management.controller;
 
 import com.omar.library.library_management.entity.User;
+import com.omar.library.library_management.entity.UserDTO;
 import com.omar.library.library_management.jpa.UserRepository;
 import com.omar.library.library_management.service.UserBookService;
 import com.omar.library.library_management.service.UserService;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -24,17 +26,17 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> retrieveAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> retrieveAllUsers() {
+        return userRepository.findAll().stream().map(u -> new UserDTO(u)).toList();
     }
 
     @GetMapping("/{id}")
-    public User retrieveUser(@PathVariable int id) {
-        return userService.checkUserExist(id);
+    public UserDTO retrieveUser(@PathVariable int id) {
+        return new UserDTO (userService.getUser(id));
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody User user) {
         return userService.createUser(user);
     }
 
@@ -45,7 +47,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id, @Valid @RequestBody User updatedUser) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable int id, @Valid @RequestBody User updatedUser) {
         return userService.updateUser(id, updatedUser);
     }
 }

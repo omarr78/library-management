@@ -1,6 +1,7 @@
 package com.omar.library.library_management.service;
 
 import com.omar.library.library_management.entity.User;
+import com.omar.library.library_management.entity.UserDTO;
 import com.omar.library.library_management.exception.ResourceNotFoundException;
 import com.omar.library.library_management.jpa.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,11 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<User> createUser(User user) {
+    public User getUser(int id){
+        return checkUserExist(id);
+    }
+
+    public ResponseEntity<UserDTO> createUser(User user) {
         checkUniqueUser(user.getUsername());
 
         User newUser = userRepository.save(user);
@@ -43,7 +48,8 @@ public class UserService {
         return ResponseEntity.created(location).build();
     }
 
-    public ResponseEntity<User> updateUser(int id, User updatedUser) {
+
+    public ResponseEntity<UserDTO> updateUser(int id, User updatedUser) {
         checkUserExist(id);
         checkUniqueUser(updatedUser.getUsername());
 
